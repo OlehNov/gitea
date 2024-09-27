@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  my-db:
+    image: mariadb:11.5
+    container_name: db_container
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: "my_password"
+      MYSQL_DATABASE: "gitea_db"
+      MYSQL_USER: "gitea_user"
+      MYSQL_PASSWORD: "gitea_password"
+    volumes:
+      - app_db:/var/lib/mysql  
+    networks:
+      - app-network
+
+
+  go-app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: app_container
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    depends_on:
+      - my-db
+    volumes:
+      - app_data:/data
+    networks:
+      - app-network
+    
+volumes:
+  app_data:
+  app_db:
+      
+networks:
+  app-network:
+    driver: bridge

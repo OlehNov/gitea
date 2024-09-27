@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: go-app-namespace
+  name: go-app
+spec:
+  strategy:
+    rollingUpdate:
+      maxSurge: 3
+      maxUnavailable: 25%
+    type: RollingUpdate
+  replicas: 3
+  selector:
+    matchLabels:
+      app: go-app
+  template:
+    metadata:
+      labels:
+        app: go-app
+    spec:
+      containers:
+      - name: go-app
+        image: olehnovak/gitea:ver-1.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DB_USERSTORYPROJ_USER
+          valueFrom:
+            secretKeyRef:
+              name: go-secrets
+              key: DB_USERSTORYPROJ_USER
+        - name: DB_USERSTORYPROJ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: go-secrets
+              key: DB_USERSTORYPROJ_PASSWORD
+        - name: DB_USERSTORYPROJ_URL
+          valueFrom:
+            secretKeyRef:
+              name: go-secrets
+              key: DB_USERSTORYPROJ_URL
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
