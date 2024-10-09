@@ -9,7 +9,7 @@ spec:
       maxSurge: 3
       maxUnavailable: 25%
     type: RollingUpdate
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: go-app
@@ -28,17 +28,17 @@ spec:
         - name: DB_USERSTORYPROJ_USER
           valueFrom:
             secretKeyRef:
-              name: go-secrets
+              name: my-secrets
               key: DB_USERSTORYPROJ_USER
         - name: DB_USERSTORYPROJ_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: go-secrets
+              name: my-secrets
               key: DB_USERSTORYPROJ_PASSWORD
         - name: DB_USERSTORYPROJ_URL
           valueFrom:
             secretKeyRef:
-              name: go-secrets
+              name: my-secrets
               key: DB_USERSTORYPROJ_URL
         resources:
           requests:

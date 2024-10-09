@@ -1,6 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
+  namespace: go-app-namespace
   name: mariadb-config
 data:
   my.cnf: |

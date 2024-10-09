@@ -11,10 +11,9 @@ services:
       MYSQL_USER: "gitea_user"
       MYSQL_PASSWORD: "gitea_password"
     volumes:
-      - app_db:/var/lib/mysql  
+      - app_db:/var/lib/mysql
     networks:
       - app-network
-
 
   go-app:
     build:
@@ -30,11 +29,11 @@ services:
       - app_data:/data
     networks:
       - app-network
-    
+
 volumes:
   app_data:
   app_db:
-      
+
 networks:
   app-network:
     driver: bridge

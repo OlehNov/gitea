@@ -1,6 +1,8 @@
+apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: mariadb
+  namespace: go-app-namespace
 spec:
   serviceName: "mariadb"
   replicas: 1
@@ -8,33 +10,34 @@ spec:
     matchLabels:
       app: mariadb
   template:
-      metadata:
-        labels:
-          app: mariadb
-      spec:
-        containers:
-          - name: mariadb
-            image: mariadb:11.5
-            ports:
-              - containerPort: 3306
-                name: mariadb
-            envFrom:
-              - secretRef:
-                name: mariadb-secrets
-            volumeMounts:
-              - name: mariadb-storage
-                mountPath: /var/lib/mysql
-              - name: config-volume
-                mountPath: /etc/mysql/conf.d
-        volumes:
-          - name: config-volume
-            configMap:
-              name: mariadb-config
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+        - name: mariadb
+          image: mariadb:11.5
+          ports:
+            - containerPort: 3306
+              name: mariadb
+          envFrom:
+            - secretRef:
+                name: my-secrets
+          volumeMounts:
+            - name: mariadb-storage
+              mountPath: /var/lib/mysql
+            - name: config-volume
+              mountPath: /etc/mysql/conf.d
+      volumes:
+        - name: config-volume
+          configMap:
+            name: mariadb-config
   volumeClaimTemplates:
     - metadata:
         name: mariadb-storage
       spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 1Gi
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
